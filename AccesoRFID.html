@@ -1,0 +1,154 @@
+<head>
+	<title>Led HTML</title>
+
+	<style>
+		body{text-align:center;}
+	</style>
+</head>
+
+<body>
+	<div id="Ingresar">
+		<h1>Ingresar Datos</h1>
+		<h4>Nombre</h4>
+		<input id="buscaNombre" type="text"> <br><br>
+		
+		<button id="encender">ENCENDER</button>
+		<button id="apagar">APAGAR</button> <br><br>
+		
+		
+	</div>
+	
+	</div id="Buscar">
+		<button id="inicio">INGRESAR</button>
+		<button id="buscar">BUSCAR</button> <br><br>
+		<h3 id="buscaTag" type="text"></h3>
+		<h3 id="buscaControl" type="text"></h3>
+	
+	
+	<script type="module">
+	// Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.6.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyDAN_EWEK4wJVDigL0pOH5qeN2iaxhhLic",
+    authDomain: "controlaccesorfid-2ec3a.firebaseapp.com",
+    databaseURL: "https://controlaccesorfid-2ec3a-default-rtdb.firebaseio.com",
+    projectId: "controlaccesorfid-2ec3a",
+    storageBucket: "controlaccesorfid-2ec3a.appspot.com",
+    messagingSenderId: "370666192716",
+    appId: "1:370666192716:web:0fe3b714b21c9cd7c399e9",
+    measurementId: "G-CYEV3NQHQK"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+	  
+	  import {getDatabase,set,get,update,remove,ref,child}
+	  from "https://www.gstatic.com/firebasejs/10.6.0/firebase-database.js"
+	  
+	  const db=getDatabase();
+	  
+	  var buscaNombre=document.querySelector("#buscaNombre");
+
+	  var botonEncender=document.querySelector("#encender");
+	  var botonApagar=document.querySelector("#apagar");
+	  var botonBuscar=document.querySelector("#buscar");
+	  var botonTag=document.querySelector("#buscaTag");
+	  var botonControl=document.querySelector("#buscaControl");
+	  var botonInicio=document.querySelector("#inicio");
+	  
+	  function EncenderLed(){
+		update(ref(db, "Control/"),{
+                Control: "Encendido"
+            })
+            .then(()=>{
+                alert("Informacion Actualizada");
+            })
+            .catch((error)=>{
+                alert(error);
+            });
+		const dbref = ref(db);
+		get(child(dbref, "Control/"))
+            .then((snapshot)=>{
+                if(snapshot.exists()){
+                    buscaControl.innerHTML = "Control: " + snapshot.val().Control;
+                } else {
+                    alert("No data found");
+                }
+            })
+            .catch((error)=>{
+                alert(error)
+            })
+	  }
+	  
+	  function ApagarLed(){
+		update(ref(db, "Control/"),{
+                Control: "Apagado"
+            })
+            .then(()=>{
+                alert("Informacion Actualizada");
+            })
+            .catch((error)=>{
+                alert(error);
+            });
+			
+		const dbref = ref(db);
+		get(child(dbref, "Control/"))
+            .then((snapshot)=>{
+                if(snapshot.exists()){
+                    buscaControl.innerHTML = "Control: " + snapshot.val().Control;
+                } else {
+                    alert("No data found");
+                }
+            })
+            .catch((error)=>{
+                alert(error)
+            })
+	  }
+	  
+	  function Inicio(){
+		update(ref(db, "Control/"),{
+                Usuario: buscaNombre.value
+            })
+            .then(()=>{
+                alert("Informacion Actualizada");
+            })
+            .catch((error)=>{
+                alert(error);
+            });
+			
+	  }
+
+	  
+	  function BuscarDatos(){
+		const dbref = ref(db);
+		get(child(dbref, "Usuarios/" + buscaNombre.value))
+            .then((snapshot)=>{
+                if(snapshot.exists()){
+                    buscaTag.innerHTML = "Tag ID: " + snapshot.val().TagID;
+                    buscaControl.innerHTML = "Control: " + snapshot.val().Control;
+                } else {
+                    alert("No data found");
+                }
+            })
+            .catch((error)=>{
+                alert(error)
+            })
+	  }
+	 
+	  
+	  botonEncender.addEventListener("click",EncenderLed);
+	  botonApagar.addEventListener("click",ApagarLed);
+	  botonBuscar.addEventListener("click",BuscarDatos);
+	  botonInicio.addEventListener("click",Inicio);
+	  
+	</script>
+	
+</body>
+</html>
